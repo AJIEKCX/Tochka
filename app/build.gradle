@@ -1,0 +1,85 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    signingConfigs {
+        debug {
+            keyAlias 'AndroidDebugKey'
+            keyPassword 'android'
+            storeFile file('debug.keystore')
+            storePassword 'android'
+        }
+    }
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.example.ajiekc.tochka"
+        minSdkVersion 15
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "VK_ENDPOINT", '"https://api.vk.com/method/"'
+        buildConfigField "String", "VK_VERSION_API", '"5.52"'
+        buildConfigField "String", "FB_ENDPOINT", '"https://graph.facebook.com/v3.1/"'
+        buildConfigField "String", "GITHUB_ENDPOINT", '"https://api.github.com/"'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+def versions = [:]
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    versions.support = "28.0.0"
+    implementation "com.android.support:support-v4:$versions.support"
+    implementation "com.android.support:appcompat-v7:$versions.support"
+    implementation "com.android.support:customtabs:$versions.support"
+    implementation "com.android.support:exifinterface:$versions.support"
+    implementation "com.android.support:recyclerview-v7:$versions.support"
+    implementation "com.android.support:design:$versions.support"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+
+    versions.lifecycle = "1.1.1"
+    implementation "android.arch.lifecycle:runtime:$versions.lifecycle"
+    implementation "android.arch.lifecycle:extensions:$versions.lifecycle"
+    kapt "android.arch.lifecycle:compiler:$versions.lifecycle"
+
+    versions.okhttp = "3.11.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:$versions.okhttp"
+
+    versions.retrofit = "2.4.0"
+    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+
+    versions.rxKotlin = "2.2.0"
+    versions.rxAndroid = "2.1.0"
+    implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
+    implementation "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
+
+    versions.picassso = "2.71828"
+    implementation "com.squareup.picasso:picasso:$versions.picassso"
+
+    implementation 'com.vk:androidsdk:1.6.7'
+    implementation 'com.facebook.android:facebook-login:4.37.0'
+    implementation 'com.google.android.gms:play-services-auth:16.0.0'
+
+    versions.room = "1.1.1"
+    implementation "android.arch.persistence.room:runtime:$versions.room"
+    implementation "android.arch.persistence.room:rxjava2:$versions.room"
+    kapt "android.arch.persistence.room:compiler:$versions.room"
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation "com.google.truth:truth:0.36"
+    testImplementation "org.mockito:mockito-core:2.13.0"
+    testImplementation "android.arch.core:core-testing:1.1.1"
+}

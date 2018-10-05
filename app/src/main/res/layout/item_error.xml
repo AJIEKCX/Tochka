@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/default_item_height"
+    android:orientation="horizontal"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/medium_margin"
+        android:text="@string/loading_failed"/>
+
+    <ImageButton
+        android:id="@+id/repeat_button"
+        android:layout_width="@dimen/default_icon_size"
+        android:layout_height="@dimen/default_icon_size"
+        android:src="@drawable/ic_repeat"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/repeat_button_descr"/>
+
+</LinearLayout>
