@@ -19,6 +19,7 @@ import com.example.ajiekc.tochka.extensions.PreferenceHelper
 import com.example.ajiekc.tochka.extensions.PreferenceHelper.clear
 import com.example.ajiekc.tochka.extensions.PreferenceHelper.get
 import com.example.ajiekc.tochka.extensions.loadRoundedImage
+import com.example.ajiekc.tochka.extensions.toast
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -58,13 +59,20 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
     private fun updateNavHeader() {
         val preferences = PreferenceHelper.defaultPrefs(this)
+        val userName = preferences[AuthActivity.USERNAME_PREF, ""]
+        val photoUrl = preferences[AuthActivity.PHOTO_URL_PREF, ""]
+        if (userName.isNullOrEmpty()) {
+            toast(getString(R.string.auth_error))
+            logout()
+        }
         val view = nav_view.getHeaderView(0)
         val userNameView = view.findViewById<TextView>(R.id.user_name_view)
         val userImageView = view.findViewById<ImageView>(R.id.user_image_view)
-        userNameView.text = preferences[AuthActivity.USERNAME_PREF, ""]
-        val photoUrl = preferences[AuthActivity.PHOTO_URL_PREF, ""]
-        Picasso.get()
-                .loadRoundedImage(photoUrl, userImageView, R.drawable.ic_user_placeholder)
+        userNameView.text = userName
+        if (!photoUrl.isNullOrEmpty()) {
+            Picasso.get()
+                    .loadRoundedImage(photoUrl, userImageView, R.drawable.ic_user_placeholder)
+        }
     }
 
     override fun onBackPressed() {
