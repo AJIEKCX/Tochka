@@ -2,6 +2,7 @@ package com.example.ajiekc.tochka
 
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
+import android.os.Build
 import com.example.ajiekc.tochka.api.LoggingInterceptor
 import com.example.ajiekc.tochka.api.fb.FBService
 import com.example.ajiekc.tochka.api.github.GithubService
@@ -18,12 +19,31 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLSocketFactory
 
 object Injection {
 
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
-            .addInterceptor(LoggingInterceptor())
-            .build()
+    fun provideSocketFactory() : SSLSocketFactory {
+        val sslContext = SSLContext.getInstance("TLSv1.2")
+        sslContext.init(null, null, null)
+        return sslContext.socketFactory
+    }
+
+    fun provideOkHttpClient(): OkHttpClient {
+        val clientBuilder = OkHttpClient.Builder()
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            clientBuilder.sslSocketFactory(provideSocketFactory())
+        }
+        clientBuilder.apply {
+            connectTimeout(20, TimeUnit.SECONDS)
+            readTimeout(20, TimeUnit.SECONDS)
+            addInterceptor(LoggingInterceptor())
+        }
+
+        return clientBuilder.build()
+    }
 
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
             .client(provideOkHttpClient())
